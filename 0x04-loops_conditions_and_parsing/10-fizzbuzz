@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# script that displays Best School 10 times
+# but on the 9th loop displays hi
+i=1
+while [ $i -le 100 ]
+do
+	echo ""
+	if [ $(("$i"%3)) -eq 0 ]
+	then
+		echo -n "Fizz"
+	fi
+	if [ $(("$i"%5)) -eq 0 ]
+	then
+		echo -n "Buzz"
+	fi
+	if [ $(("$i"%3)) -ne 0 ] && [ $(("$i"%5)) -ne 0 ]
+	then
+		echo -n "$i"
+	fi
+	i=$(( i + 1 ))
+done
