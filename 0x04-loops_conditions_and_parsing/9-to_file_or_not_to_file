@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# script that checks if a file exists
+# and checks some of its properties
+
+if [[ ! -e "$1" ]]
+then
+	echo "$1 file does not exist"
+else
+	echo "$1 file exists"
+	if [[ -s $1 ]]
+	then
+		echo "$1 file is not empty"
+	else
+		echo "$1 file is empty"
+	fi
+	if [[  -f $1 ]]
+	then
+		echo "$1 is a regular file"
+	fi
+fi
