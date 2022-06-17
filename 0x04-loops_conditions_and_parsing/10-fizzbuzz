@@ -4,7 +4,6 @@
 i=1
 while [ $i -le 100 ]
 do
-	echo ""
 	if [ $(("$i"%3)) -eq 0 ]
 	then
 		echo -n "Fizz"
@@ -17,5 +16,6 @@ do
 	then
 		echo -n "$i"
 	fi
+	echo ""
 	i=$(( i + 1 ))
 done
