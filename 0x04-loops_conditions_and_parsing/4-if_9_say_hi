@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # script that displays Best School 10 times
+# but on the 9th loop displays hi
 i=1
 while [ $i -le 10 ]
 do
 	if [ $i -eq 9 ]
 	then
-		echo "9"
+		echo "Hi"
 	else
 		echo "Best School"
 	fi
