@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# script that displays Best School 10 times
+# but on the 9th loop displays hi
+i=0
+j=1
+while [ $i -le 12 ]
+do
+	j=1
+	echo "Hour: $i"
+while [ $j -le 59 ]
+do
+	echo "$j"
+	j=$(( j + 1 ))
+done
+	i=$(( i + 1 ))
+done
