@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Prints process list with ascii tree and all users with the word bash
+# shellcheck disable=SC2009
+
+ps auxf | grep "bash"
