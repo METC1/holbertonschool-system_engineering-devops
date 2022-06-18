@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Gest the script own process id
+
+echo "$$"
