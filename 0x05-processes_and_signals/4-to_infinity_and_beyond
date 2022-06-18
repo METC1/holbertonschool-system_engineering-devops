@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Gest the script own process id
 
-while [ 1 ]
+while true
 do
 	echo "To infinity and beyond"
 done
