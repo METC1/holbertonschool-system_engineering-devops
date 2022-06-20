@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# script that displays the content of the file /etc/passwd
+# and echo only some parameters
+file="/etc/passwd"
+
+while IFS=: read -r word1 word2 word3 word4 word5 word6 word7
+do
+echo "$word1:$word3:$word6"
+done < $file
