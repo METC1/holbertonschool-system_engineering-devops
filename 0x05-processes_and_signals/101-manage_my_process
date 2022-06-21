@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# kills process 4-to_infinity_and_beyond
+
+if [[ "$1" == "start" ]]
+then
+	./manage_my_process
+	echo "manage_my_process started"
+fi
+if [[ "$1" == "stop" ]]
+then
+	pkill -f manage_my_process
+	rm /var/run/my_process.pid
+	echo "manage_my_process stopped"
+fi
+if [[ "$1" == "restart" ]]
+then
+	pkill -f manage_my_process
+	rm /var/run/my_process.pid
+	./manage_my_process
+	echo "manage_my_process restarted"
+fi
