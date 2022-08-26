@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#Script to replace  8080 for 80 in default file located in etc/nginnx/sites-enabled
+
+sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
+service nginx restart
