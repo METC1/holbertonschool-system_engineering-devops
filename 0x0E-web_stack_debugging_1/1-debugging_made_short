@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script to debug nginx
+# Bash script to solve the problem
 sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
 service nginx restart
 sudo pkill -o nginx
