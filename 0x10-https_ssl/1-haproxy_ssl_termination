@@ -31,18 +31,21 @@ defaults
         errorfile 502 /etc/haproxy/errors/502.http
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
-frontend firstbalance
-        bind *:80
+frontend www-http
+        bind 54.161.40.17:80
+        reqadd X-Forwarded-Proto:\ http
         option forwardfor
         default_backend webservers
-frontend https
-        bind *:443 ssl crt /etc/letsencrypt/live/www.webmetc.tech/fullchain.pem
+frontend www-https
+        bind 54.161.40.17:443 ssl crt /etc/haproxy/certs/www.webmetc.tech.pem
+        reqadd X-Forwarded-Proto:\ https
+        acl letsencrypt-acl path_beg /.well-known/acme-challenge/
         use_backend letsencrypt-backend if letsencrypt-acl
+        default_backend webservers
 backend webservers
         balance roundrobin
+        redirect scheme https if !{ ssl_fc }
         server 4513-web-01 3.95.206.242:80 check
         server 4513-web-02 54.146.102.0:80 check
-        option httpchk
 backend letsencrypt-backend
         server letsencrypt 127.0.0.1:54321
-
