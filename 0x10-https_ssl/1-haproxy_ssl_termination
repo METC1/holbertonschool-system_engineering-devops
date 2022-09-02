@@ -16,6 +16,7 @@ global
         ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
         ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
         ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
+
 defaults
         log     global
         mode    http
@@ -31,20 +32,17 @@ defaults
         errorfile 502 /etc/haproxy/errors/502.http
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
+
 frontend www-http
-        bind 54.161.40.17:80
-        reqadd X-Forwarded-Proto:\ http
-        option forwardfor
-        default_backend webservers
-frontend www-https
-        bind 54.161.40.17:443 ssl crt /etc/haproxy/certs/www.webmetc.tech.pem
-        reqadd X-Forwarded-Proto:\ https
-        acl letsencrypt-acl path_beg /.well-known/acme-challenge/
-        use_backend letsencrypt-backend if letsencrypt-acl
+        bind *:80
+        mode http
         default_backend webservers
 backend webservers
         balance roundrobin
-        redirect scheme https if !{ ssl_fc }
+        option forwardfor
+        http-request set-header x-Forwarded-Port %[dst_port]
+        http-request add-header x-Forwarded-Proto https if { ssl_fc }
+        option httpchk HEAD / HTTP/1.1\r\nHost:localhost
         server 4513-web-01 3.95.206.242:80 check
         server 4513-web-02 54.146.102.0:80 check
 backend letsencrypt-backend
