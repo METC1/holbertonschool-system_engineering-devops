@@ -26,7 +26,7 @@ if __name__ == "__main__":
         if task.get("userId") == usrId:
             row_dict["task"] = task.get("title")
             row_dict["completed"] = task.get("completed")
-            row_dict["usrname"] = usrname
+            row_dict["username"] = usrname
             tasks_list.append(row_dict)
         user_dict = {usrId: tasks_list}
     filename = employ_id + ".json"
