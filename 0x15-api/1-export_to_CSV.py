@@ -15,6 +15,7 @@ if __name__ == "__main__":
     employ_req = requests.get(employ_url).json()
     tasks_req = requests.get(tasks_url).json()
     name = employ_req.get("name")
+    usrname = employ_req.get("username")
     usrId = int(argv[1])
     tasks_total = 0
     tasks_done = []
@@ -30,5 +31,5 @@ if __name__ == "__main__":
     with open(filename, "w") as my_file:
         csv_writer = csv.writer(my_file, quoting=csv.QUOTE_ALL, quotechar='"')
         for task2 in tasks_req:
-            row = [usrId, name, task2.get("completed"), task.get("title")]
+            row = [usrId, usrname, task2.get("completed"), task.get("title")]
             csv_writer.writerow(row)
