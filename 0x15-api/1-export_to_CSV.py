@@ -27,7 +27,7 @@ if __name__ == "__main__":
         tasks_total += 1
 
     filename = employ_id + ".csv"
-    with open (filename, "w") as my_file:
+    with open(filename, "w") as my_file:
         csv_writer = csv.writer(my_file, quoting=csv.QUOTE_ALL, quotechar='"')
         for task2 in tasks_req:
             row = [usrId, name, task2.get("completed"), task.get("title")]
