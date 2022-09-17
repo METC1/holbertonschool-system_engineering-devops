@@ -31,5 +31,5 @@ if __name__ == "__main__":
     with open(filename, "w") as my_file:
         csv_writer = csv.writer(my_file, quoting=csv.QUOTE_ALL, quotechar='"')
         for task2 in tasks_req:
-            row = [usrId, usrname, task2.get("completed"), task.get("title")]
+            row = [usrId, usrname, task2.get("completed"), task2.get("title")]
             csv_writer.writerow(row)
