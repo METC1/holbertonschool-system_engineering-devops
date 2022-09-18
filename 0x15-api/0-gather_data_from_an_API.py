@@ -7,7 +7,7 @@ import requests
 from sys import argv
 
 if __name__ == "__main__":
-    employ_id = argv[1]
+    employ_id = int(argv[1])
     employ_url = "https://jsonplaceholder.typicode.com/users/{}"\
                  .format(employ_id)
     tasks_url = employ_url + "/todos"
