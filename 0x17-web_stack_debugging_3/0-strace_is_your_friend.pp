@@ -1,5 +1,5 @@
-# Puppet 
+# Puppet script to fix Wordpress settings
 exec { 'Fix_wordpresss':
-	command	=>	"sed '/s.phpp/.php'/var/www/html/wp-settings.php";
+	command	=>	"sed '/sphpp/php/g'/var/www/html/wp-settings.php";
 	provider=>	shell,
 	}
