@@ -1,0 +1,97 @@
+PROJECT POSTMORTEM REPORT (FIRST ATTEMPT FOR EDUCATIONAL PURPOSE)
+
+TITLE: Postmortem web server down
+
+DATE: 30/09/2022
+
+AUTHORS: Mauricio Thomae
+
+SUMMARY: Web server down for 3 hours after an update of the web page using WordPress, issue was detected to occur in at the 15:10 hours GMT-6 and was fixed a t the 18:08 hours GMT-6 all users lost access to the website for the duration of the incident, root cause was detected to be a typo error in the configuration file which prevented loading required files.
+
+TRIGGER: A typo in the wp-settings file which attempted to load website files with the. phpp extension instead of .php, this caused the files to not be located or loaded thus the web server returning an error.
+
+ROOT CAUSES: An error was introduced in the update of the webpage on the server, configuration file wp-settings was trying to load php file class-wp-locale.phpp instead of class-wp-locale.php located in the /var/www/html/wp-includes/ lstat returned -1 ENOENT (No such file or directory) affecting the loading part of website, which caused Apache web server to return an error 500 “HTTP/1.0 500 Internal Server Err”.
+
+RESOLUTION: Running processes were listed using ps, then the processes believed to be associated with the process were monitored using strace and attaching each process separately, the fault was pinpointed to be appearing just after the lad of “/var/www/html/wp-includes/class-wp-locale.phpp” the file that existed in the server was named “class-wp-locale.php”. The file was traced to be loaded in the “/var/www/html/wp-settings.php”. A script was created with puppet to change the string phpp to php in all occurrences in the file “/var/www/html/wp-settings.php”, script was deployed to the server and run fixing the issue, then the web server was restarted and the 500 error was corrected, receiving a 200 response.
+
+CORRECTIVE AND PREVENTIVE MEASURES: Linting should be done thoughtfully on files just after editing or creating. A test environment or a mirror server should be included so that changes could be tested Before deployment on the main server. Also a set of tests should be designed and documented to be run just after deployment on the server to ensure that the deployment is done successfully and that features are working ok.
+
+TIMELINE:
+
+15:10 First 500 error
+
+15:11 Multiple 500 errors detected
+
+15:15 Tech connected to the server
+
+15:20 Test begin to pinpoint error
+
+15:50 error still not located
+
+16:15 Error pinpointed in the web server
+
+16:30 Error detected in loading .php files
+
+17:00 Error located in the wp-settings file in the var/www/html folder
+
+17:30 Algorithm for the fix created
+
+17:45 Tested algorithm with success
+
+18:00 Puppet script created and deployed to server
+
+18:05 fix applied and web server restarted
+
+18:08 Web server restored and received 200 response
+
+LOG OR DUMP ERROR: Dump of strace just after the error occurrence
+
+access(“/var/www/html/wp-content/object-cache.php”, F_OK) = -1 ENOENT (No such file or directory)
+
+stat(“/var/www/html/wp-includes/cache.php”, {st_mode=S_IFREG|0644, st_size=22058, …}) = 0
+
+stat(“/var/www/html/wp-includes/default-filters.php”, {st_mode=S_IFREG|0644, st_size=25220, …}) = 0
+
+stat(“/var/www/html/wp-includes/l10n.php”, {st_mode=S_IFREG|0644, st_size=43130, …}) = 0
+
+lstat(“/var/www/html/wp-includes/class-wp-locale.phpp”, 0x7ffcd8c90ff0) = -1 ENOENT (No such file or directory)
+
+lstat(“/var/www/html/wp-includes/class-wp-locale.phpp”, 0x7ffcd8c90ec0) = -1 ENOENT (No such file or directory)
+
+lstat(“/var/www/html/wp-includes/class-wp-locale.phpp”, 0x7ffcd8c930f0) = -1 ENOENT (No such file or directory)
+
+open(“/var/www/html/wp-includes/class-wp-locale.phpp”, O_RDONLY) = -1 ENOENT (No such file or directory)
+
+chdir(“/”) = 0
+
+write(12, “\1\0\0\0\1”, 5) = 5
+
+shutdown(12, SHUT_RDWR) = 0
+
+close(12) = 0
+
+setitimer(ITIMER_PROF, {it_interval={0, 0}, it_value={0, 0}}, NULL) = 0
+
+fcntl(8, F_SETLK, {type=F_UNLCK, whence=SEEK_SET, start=0, len=0}) = 0
+
+setitimer(ITIMER_PROF, {it_interval={0, 0}, it_value={0, 0}}, NULL) = 0
+
+writev(11, [{“HTTP/1.0 500 Internal Server Err”…, 187}], 1) = 187
+
+write(7, “127.0.0.1 — — [01/Oct/2022:21:39”…, 87) = 87
+
+times({tms_utime=4, tms_stime=4, tms_cutime=0, tms_cstime=0}) = 5103932792
+
+shutdown(11, SHUT_WR) = 0
+
+poll([{fd=11, events=POLLIN}], 1, 2000) = 1 ([{fd=11, revents=POLLIN|POLLHUP}])
+
+read(11, “”, 512) = 0
+
+close(11) = 0
+
+read(4, 0x7ffcd8c98297, 1) = -1 EAGAIN (Resource temporarily unavailable)
+
+accept4(3, ^CProcess 198 detached
+
+<detached …>
