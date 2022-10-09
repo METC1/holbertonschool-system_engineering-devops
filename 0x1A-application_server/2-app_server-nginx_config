@@ -55,6 +55,9 @@ server {
 
                 proxy_pass http://127.0.0.1:5000;
         }
+	location /hbnb_static/ {
+		alias /web_static/current/;
+	}
 
         # pass PHP scripts to FastCGI server
         #
